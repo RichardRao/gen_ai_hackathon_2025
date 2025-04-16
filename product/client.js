@@ -2,33 +2,132 @@
 // const io = require('socket.io-client');
 // const socket = io(); // Assuming you're using Socket.IO for real-time communication
 // DOM Elements
-const roleSelection = document.getElementById('role');
+// const roleSelection = document.getElementById('role');
 const canvasContainer = document.getElementById('canvasContainer');
 const canvas = document.getElementById('drawingCanvas');
+const microphone = document.getElementById('recordButton');
 const ctx = canvas.getContext('2d');
 
 // Variables
 let isDrawing = false;
 let role = null;
+let socketInitialized = false;
+let socket = null;
 
-// Role Selection
-roleSelection.onchange = function() {
-    console.log('test');
-    const role = roleSelection.value;
-    // canvasContainer = document.getElementById('canvasContainer');
-    if (role === 'child') {
-        canvasContainer.style.display = 'block';
-        enableDrawing();
-    } else {
-        canvasContainer.style.display = 'none';
-        disableDrawing();
+function initializeSocket() {
+    console.log('Initializing socket connection...', socketInitialized);
+    if (!socketInitialized || socket === null) {
+        socketInitialized = true;
+
+        // Establish connection with the server
+        socket = io("http://localhost:5000");
+        // Handle connection events
+        socket.on('connect', () => {
+            const userName = Math.random().toString(36).substring(2, 15); // Generate a random request ID
+            const userData = {
+                username: userName,
+                role: 'child',
+                timestamp: new Date().toISOString(),
+                sid: socket.id
+            };
+            socket.emit('join', userData);
+            console.log('Connected to server with request ID:', userName);
+        });
+        
+        
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        // Handle window unload event to disconnect from server
+        window.addEventListener('beforeunload', () => {
+            socket.emit('disconnect');
+            socket.disconnect();
+        });
+
     }
+}
+
+navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
+
+    mediaRecorder.ondataavailable = event => {
+        console.log('Audio data available:', event.data);
+        audioChunks.push(event.data);
+    };
+    mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/aac' });
+        const reader = new FileReader();
+        reader.onload = () => {
+            const audioBase64 = reader.result.split(',')[1];
+
+            // Save the audio as a .wav file locally
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const link = document.createElement('a');
+            link.href = audioUrl;
+            link.download = 'audio_recording.aac';
+            link.click();
+
+            // Send the audio to the server
+            if (socket && socket.connected) {
+                socket.emit('audio', { 
+                    audio: audioBase64, 
+                    sampleRate: stream.getAudioTracks()[0].getSettings().sampleRate,
+                    sampleWidth: stream.getAudioTracks()[0].getSettings().sampleSize || 16, // Default to 16 if undefined
+                    channels: stream.getAudioTracks()[0].getSettings().channelCount || 1, // Default to 1 if undefined
+                });
+                console.log('Audio data sent to server');
+            }
+            audioChunks.length = 0; // Clear the audioChunks array
+        };
+        reader.readAsDataURL(audioBlob);
+    };
+
+    microphone.onclick = function() {
+        microphone.classList.toggle('recording');
+        if (microphone.classList.contains('recording')) {
+            microphone.innerHTML = 'Recording... (click to stop)';
+            mediaRecorder.start();
+        } else {
+            microphone.innerHTML = 'Click to Record';
+            mediaRecorder.stop();
+        }
+    };
+})
+.catch(error => {
+    console.error('Error accessing microphone:', error);
+});
+
+enableDrawing();
+initializeSocket();
+// Role Selection
+// roleSelection.onchange = function() {
+//     const role = roleSelection.value;
+//     if (role === 'child') {
+//         canvasContainer.style.display = 'block';
+//         enableDrawing();
+//     } else {
+//         canvasContainer.style.display = 'none';
+//         disableDrawing();
+//     }
+//     initializeSocket();
+// }
+
+document.getElementById('sendButton').onclick = function() {
+    // const role = roleSelection.value;
+    // if (role === 'child') {
+    const imageData = canvas.toDataURL('image/png');
+    if (socket && socket.connected) {
+        socket.emit('canvas_image', { image: imageData });
+        console.log('Canvas image sent to server');
+    }
+    // }
 }
 
 document.getElementById('clearButton').onclick = function() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    // sendClearCanvas();
 }
 
 // Drawing Logic
@@ -64,12 +163,13 @@ function stopDrawing() {
     ctx.closePath();
 }
 
-// // Send Drawing Data to Server
-// function sendDrawingData(point) {
-//     if (role === 'child') {
-//         socket.emit('drawing', point);
-//     }
-// }
+// Send Drawing Data to Server
+function sendDrawingData(point) {
+    console.log('Sending drawing data:', point);
+    if (socket && socket.connected) {
+        socket.emit('drawing', point);
+    }
+}
 
 // // Receive Drawing Data from Server
 // socket.on('drawing', (point) => {

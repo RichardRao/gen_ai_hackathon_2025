@@ -1,0 +1,228 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'SF Pro Display', Arial, sans-serif;
+  background: #d1d1d1;
+}
+
+.drawing-panel-bg {
+  width: 1194px;
+  height: 834px;
+  background: #d1d1d1;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-frame {
+  width: 1094px;
+  height: 777px;
+  display: flex;
+  flex-direction: row;
+  background: none;
+}
+
+.sidebar {
+  width: 98px;
+  height: 777px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brush-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 98px;
+  height: 777px;
+  background: #b0b0b0;
+  border-radius: 10px;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.25);
+  z-index: 0;
+}
+
+.toolbox {
+  position: relative;
+  margin-top: 19px;
+  width: 98px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 1;
+}
+
+.tool.pen {
+  width: 92px;
+  height: 33px;
+  border-radius: 8px;
+  background: #fff;
+  margin: 0 auto;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+  position: relative;
+}
+.tool.red .color-band, .tool.red {
+  border-left: 7px solid #d4283a;
+}
+.tool.blue .color-band, .tool.blue {
+  border-left: 7px solid #0060f0;
+}
+.tool.purple .color-band, .tool.purple {
+  border-left: 7px solid #a528a1;
+}
+.tool.black .color-band, .tool.black {
+  border-left: 7px solid #5a5a5a;
+}
+.tool.green .color-band, .tool.green {
+  border-left: 7px solid #3fc950;
+}
+.tool.yellow .color-band, .tool.yellow {
+  border-left: 7px solid #fedf22;
+}
+.tool.orange .color-band, .tool.orange {
+  border-left: 7px solid #f9b843;
+}
+
+.tool.eraser {
+  width: 80px;
+  height: 37px;
+  background: #fc7c90;
+  border-radius: 8px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #dbdbdb;
+  width: 74px;
+  margin: 10px auto;
+}
+
+.shapes {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  margin-top: 24px;
+}
+.shape {
+  width: 36px;
+  height: 36px;
+  background: #000;
+  margin: 0 auto;
+}
+.shape.circle {
+  border-radius: 50%;
+  border: 4px solid #f2f3f5;
+  background: #000;
+}
+.shape.selected.circle {
+  box-shadow: 0 0 0 4px #f2f3f5;
+}
+.shape.square {
+  border-radius: 0;
+}
+.shape.polygon {
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+  background: #000;
+  width: 42px;
+  height: 42px;
+}
+.shape.star {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  background: #000;
+  width: 42px;
+  height: 42px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 18px;
+}
+
+.header {
+  width: 975px;
+  height: 76px;
+  background: #daeafc;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  margin-bottom: 8px;
+  padding: 0 24px;
+}
+.user-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #0060f0;
+  background: #fff;
+}
+.greeting-text {
+  width: 465px;
+  height: 28px;
+  background: #0060f0;
+  border-radius: 6px;
+}
+
+.drawing-area {
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+}
+.drawing-input {
+  width: 484px;
+  height: 681px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 10px;
+}
+.ai-output {
+  width: 485px;
+  height: 681px;
+  background: #fff;
+  border-radius: 10px;
+  border: 10px solid;
+  border-image: linear-gradient(135deg, #daeafc 0%, #83909a 100%) 1;
+}
+
+.floating-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 96px;
+  height: 96px;
+  background: #0071ff;
+  border-radius: 200px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 10;
+}
+.floating-btn .icon {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.floating-btn .btn-text {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 8px;
+}
+.floating-btn .mic-icon {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+} 

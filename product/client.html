@@ -8,20 +8,30 @@
 <body>
     <h1>Welcome to the Client Page</h1>
     <label for="role">Select your role:</label>
-    <select id="role">
+    <select id="role" >
+        <option value="" selected disabled hidden>Choose here</option>
         <option value="parent">Parent</option>
         <option value="child">Child</option>
     </select>
     <div id="canvasContainer" style="display: none; margin-top: 20px;">
         <h2>Draw something!</h2>
         <p>Click and drag to draw on the canvas. Click the "Send" button to send your drawing.</p>
-        <canvas id="drawingCanvas" width="500" height="500" style="border: 1px solid black;"></canvas>
+        <canvas id="drawingCanvas" width="500" height="300" style="border: 1px solid black;"></canvas>
         <p id="canvasMessage" style="display: none;">Your drawing has been sent!</p>
         <div>
             <button id="sendButton" style="margin-top: 20px;">Send</button>
             <button id="clearButton" style="margin-top: 20px;">Clear</button>
         </div>
+
+        <div id="recordingContainer" style="margin-top: 20px;">
+            <h2>Record your voice</h2>
+            <p>Click the "Record" button to start recording your voice. Click "Stop" to stop recording.</p>
+            <button id="recordButton" style="margin-top: 10px;">Record</button>
+            <p id="recordingMessage" style="display: none;">Your recording has been saved!</p>
+        </div>
     </div>
 </body>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="client.js"></script>
 </html>

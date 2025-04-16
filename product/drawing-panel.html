@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1194, initial-scale=1.0">
+  <title>iPad Pro 11" Drawing Panel</title>
+  <link rel="stylesheet" href="drawing-panel.css">
+</head>
+<body>
+  <div class="drawing-panel-bg">
+    <div class="main-frame">
+      <aside class="sidebar">
+        <div class="brush-background"></div>
+        <nav class="toolbox">
+          <div class="tool pen red"></div>
+          <div class="tool pen blue"></div>
+          <div class="tool pen purple"></div>
+          <div class="tool pen black"></div>
+          <div class="tool pen green"></div>
+          <div class="tool pen yellow"></div>
+          <div class="tool pen orange"></div>
+          <div class="tool eraser" id="clearButton"></div>
+          <hr class="divider">
+          <div class="shapes">
+            <div class="shape selected circle"></div>
+            <div class="shape square"></div>
+            <div class="shape polygon"></div>
+            <div class="shape star"></div>
+          </div>
+        </nav>
+      </aside>
+      <main class="content">
+        <header class="header">
+          <div class="user-icon"></div>
+          <div class="greeting-text"></div>
+        </header>
+        <section class="drawing-area">
+          <div class="drawing-input" id="canvasContainer">
+            <canvas id="drawingCanvas" style="width:484px; height: 660px; border: 1px solid black;"></canvas>
+          </div>
+          <button id="sendButton">Send</button>
+          <div class="ai-output"></div>
+        </section>
+        <button class="floating-btn" id="recordButton">
+          <span class="icon"></span>
+          <span class="btn-text"></span>
+          <span class="mic-icon"></span>
+        </button>
+      </main>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="client.js"></script>
+</html> 
