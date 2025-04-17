@@ -41,7 +41,11 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="motion-graphic">
-                <img src="kaleidoscope.jpg" alt="Kaleidoscope Motion Graphic">
+                <video class="motion-video" autoplay playsinline loop muted>
+                    <source src="icons/392_1744922338.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <!-- <img src="kaleidoscope.jpg" alt="Kaleidoscope Motion Graphic"> -->
             </div>
             
             <div class="text-content">
@@ -59,4 +63,18 @@
         </div>
     </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const video = document.querySelector(".motion-video");
+        const parentDiv = video.parentElement;
+
+        const resizeVideo = () => {
+            video.style.width = `${parentDiv.offsetWidth}px`;
+            video.style.height = `${parentDiv.offsetHeight}px`;
+        };
+
+        resizeVideo();
+        window.addEventListener("resize", resizeVideo);
+    });
+</script>
 </html> 
