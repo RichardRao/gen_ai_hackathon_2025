@@ -1,0 +1,181 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #111111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 390px;
+    height: 844px;
+    background-color: #111111;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Navigation Bar */
+.nav-bar {
+    width: 100%;
+    height: 56px;
+    background-color: #111111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    position: absolute;
+    top: 100px;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFB1EE;
+}
+
+.profile-button {
+    width: 36px;
+    height: 36px;
+    background-color: #FFB1EE;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Text Buttons Group */
+.text-buttons-group {
+    width: 100%;
+    height: 55px;
+    background-color: #111111;
+    position: absolute;
+    top: 174px;
+}
+
+.text-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    gap: 47px;
+}
+
+.text-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #545659;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.text-button.active {
+    color: #FFB1EE;
+}
+
+.gradient-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        #FFB1EE 0%,
+        #F4AA7A 34.13%,
+        #FAFE66 67.29%,
+        #BAFB9D 100%
+    );
+}
+
+/* Main Content */
+.main-content {
+    width: 100%;
+    height: 597px;
+    position: absolute;
+    top: 247px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 0;
+    gap: 37px;
+}
+
+.motion-graphic {
+    width: 281px;
+    height: 281px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.motion-graphic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.text-content {
+    width: 326px;
+    padding: 0 32px;
+}
+
+.text-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #fff;
+    text-align: center;
+}
+
+.controls {
+    width: 326px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 32px;
+}
+
+.control-button {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    border: 1px solid #303030;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-button:hover {
+    transform: scale(1.05);
+}
+
+.cancel {
+    background-color: #191919;
+}
+
+.record {
+    background-color: #232323;
+}
+
+.cancel-icon, .mic-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* SVG Icons */
+.bars-icon, .profile-icon, .voice-icon, .brush-icon, .prompt-icon {
+    width: 24px;
+    height: 24px;
+} 
