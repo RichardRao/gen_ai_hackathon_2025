@@ -32,14 +32,16 @@
       <main class="content">
         <header class="header">
           <div class="user-icon"></div>
-          <div class="greeting-text"></div>
+          <div class="greeting-text" id="ai-text-bar"></div>
         </header>
         <section class="drawing-area">
           <div class="drawing-input" id="canvasContainer">
-            <canvas id="drawingCanvas" style="width:484px; height: 660px; border: 1px solid black;"></canvas>
+            <canvas id="drawingCanvas"></canvas>
           </div>
           <button id="sendButton">Send</button>
-          <div class="ai-output"></div>
+          <div class="ai-output" id="aiGeneratedDrawing">
+            <canvas id="generatedCanvas"></canvas>
+          </div>
         </section>
         <button class="floating-btn" id="recordButton">
           <span class="icon"></span>
@@ -50,6 +52,24 @@
     </div>
   </div>
 </body>
+<script>
+  window.addEventListener('load', () => {
+    const canvas = document.getElementById('drawingCanvas');
+    const container = document.getElementById('canvasContainer');
+    const returnCanvas = document.getElementById('generatedCanvas');
+    const returnContainer = document.getElementById('aiGeneratedDrawing');
+
+    function resizeCanvas() {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      returnCanvas.width = returnContainer.clientWidth;
+      returnCanvas.height = returnContainer.clientHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+  });
+</script>
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="client.js"></script>
 </html> 

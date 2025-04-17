@@ -7,6 +7,7 @@ const canvasContainer = document.getElementById('canvasContainer');
 const canvas = document.getElementById('drawingCanvas');
 const microphone = document.getElementById('recordButton');
 const ctx = canvas.getContext('2d');
+const aiCtx = document.getElementById('generatedCanvas').getContext('2d');
 
 // Variables
 let isDrawing = false;
@@ -34,7 +35,22 @@ function initializeSocket() {
             console.log('Connected to server with request ID:', userName);
         });
         
-        
+        socket.on('canvasImageResult', (data) => {
+            console.log('Received canvas image result:', data);
+            const img = new Image();
+            img.src = data.image;
+            img.onload = () => {
+                aiCtx.clearRect(0, 0, aiCtx.canvas.width, aiCtx.canvas.height);
+                aiCtx.drawImage(img, 0, 0, aiCtx.canvas.width, aiCtx.canvas.height);
+                // aiCtx.drawImage(img, 0, 0);
+            };
+        });
+
+        socket.on('asrResult', (data) => {
+            // console.log('Received ASR result:', data);
+            document.getElementById('ai-text-bar').innerHTML = data.text;
+        });
+
         socket.on('disconnect', () => {
             console.log('Disconnected from server');
         });
@@ -62,12 +78,11 @@ navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
         reader.onload = () => {
             const audioBase64 = reader.result.split(',')[1];
 
-            // Save the audio as a .wav file locally
-            const audioUrl = URL.createObjectURL(audioBlob);
-            const link = document.createElement('a');
-            link.href = audioUrl;
-            link.download = 'audio_recording.aac';
-            link.click();
+            // Save the audio as a .wav file locally 
+            // const link = document.createElement('a');
+            // link.href = URL.createObjectURL(audioBlob);
+            // link.download = 'audio_recording.aac';
+            // link.click();
 
             // Send the audio to the server
             if (socket && socket.connected) {

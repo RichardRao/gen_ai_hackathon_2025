@@ -1,11 +1,17 @@
-from flask import Flask, render_template, request
+from flask import Flask, request
 from flask_socketio import SocketIO, emit
 from PIL import Image
 import base64
-import io
+import shutil
 import os
-import soundfile as sf
+import numpy as np
 
+import whisper
+import torch
+import torchaudio
+
+# Load ASR server
+model = whisper.load_model("turbo")
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -57,6 +63,12 @@ def handle_drawing(data):
 def handle_canvas_image(data):
     # Decode the base64 image data
     image_data = data.get('image')
+    # Replace with the actual path to your ComfyUI input directory
+    comfyui_input_dir = '../../ComfyUI/input'
+    comfyui_output_dir = '../../ComfyUI/output'
+    workflow_json = '../../ComfyUI/user/default/workflows/gen_ai_hackathon_2025_04_17.json'
+    input_temp_image = 'AIGC_00001_.png'
+    generated_image = 'AIGC_00000_.png'
     if image_data:
         try:
             # Create a directory to store images if it doesn't exist
@@ -73,10 +85,21 @@ def handle_canvas_image(data):
                     background.paste(img, mask=img.split()[3] if img.mode == 'RGBA' else None)
                     background.save('temp_image.png', 'PNG')
             os.rename('temp_image.png', os.path.join(image_dir, 'canvas_image.png'))
-            # image_path = os.path.join(image_dir, 'canvas_image.png')
-            # with open(image_path, 'wb') as image_file:
-            #     image_file.write(base64.b64decode(image_data.split(',')[1]))
-            # emit('canvasImageSaved', {'message': 'Image saved successfully.'})
+            shutil.copyfile(os.path.join(image_dir, 'canvas_image.png'), 
+                            os.path.join(comfyui_input_dir, generated_image))
+            # remove all png file in comfyui_output_dir
+            for file in os.listdir(comfyui_output_dir):
+                if file.endswith('.png'):
+                    os.remove(os.path.join(comfyui_output_dir, file))
+            os.system('comfy run --workflow ' + workflow_json)
+            # Wait for the ComfyUI process to finish
+            shutil.move(os.path.join(comfyui_output_dir, input_temp_image),
+                            os.path.join(image_dir, generated_image))
+            with open(os.path.join(image_dir, generated_image), "rb") as result_image:
+                encoded_image = base64.b64encode(result_image.read()).decode('utf-8')
+            # print(encoded_image)
+            # Send the image back to the client
+            emit('canvasImageResult', {'image': f'data:image/png;base64,{encoded_image}'})
         except Exception as e:
             emit('canvasImageError', {'message': f'Error saving image: {str(e)}'})
 
@@ -100,8 +123,10 @@ def handle_audio(data):
             aac_path = os.path.join(audio_dir, 'audio_recording.aac')
             with open(aac_path, 'wb') as aac_file:
                 aac_file.write(decoded_audio)
-
-            emit('audioSaved', {'message': 'Audio saved successfully.'})
+            result = model.transcribe(aac_path, language='en', task='transcribe')
+            print(result['text'])
+            # Send a success message back to the client        
+            emit('asrResult', {'text': result['text']})
         except Exception as e:
             emit('audioError', {'message': f'Error saving audio: {str(e)}'})
 
