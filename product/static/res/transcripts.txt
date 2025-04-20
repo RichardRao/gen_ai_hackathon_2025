@@ -1,0 +1,10 @@
+audio_1.wav|Hi there! What kind of amazing story are you thinking about today?
+audio_2.wav|Ooh, that sounds exciting! Now, who is the main character in your story? Tell me a little bit about them.
+audio_3.wav|Wow! What does your character look like? Are they big or small? What colors do they have? Do they have any special features?
+audio_4.wav|Cool! What is your character doing in this picture? Are they running, jumping, talking, or something else?
+audio_5.wav|And how is your character feeling right now? Are they happy, sad, excited, or maybe a little bit scared? How can you tell?
+audio_6.wav|Where is your character? Are they in a forest, a house, by the sea, or somewhere else? Tell me about the place.
+audio_7.wav|What does it look like around your character? Are there trees, toys, other characters, or anything special in the background?
+audio_8.wav|What's the weather like in your picture? Is it sunny, rainy, snowy, or cloudy?
+audio_8.wav|Is it daytime or nighttime in your story picture?
+audio_10.wav|Is there anything else super special or important about your picture that you want me to know so it looks just right?

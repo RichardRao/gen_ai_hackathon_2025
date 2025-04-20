@@ -1,6 +1,7 @@
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO, emit
 from PIL import Image
+from flask_cors import CORS
 import base64
 import shutil
 import os
@@ -12,7 +13,8 @@ import torchaudio
 
 # Load ASR server
 model = whisper.load_model("turbo")
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
+CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Store peer connections
@@ -21,6 +23,14 @@ peers = {}
 @app.route('/')
 def index():
     return "WebRTC Server is running."
+
+@app.route('/drawing-panel.html')
+def serve_child_client():
+    return send_from_directory('static','drawing-panel.html')
+
+@app.route('/index.html')
+def serve_parent_client():
+    return send_from_directory('static','index.html')
 
 # Handle signaling messages for WebRTC
 @socketio.on('signal')

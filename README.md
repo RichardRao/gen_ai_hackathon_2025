@@ -65,17 +65,14 @@ Ensure you have the following installed on your system:
    python server.py
    ```   
 
-4. Start an http server in another termnial session:
-   ```bash
-   python -m http.server 8080
-   ```   
-
-5. Start ComfyUI by calling 
+3. Start ComfyUI by calling 
    ```bash
    comfy launch
    ```   
 
-6. The server will run on `http://0.0.0.0:8080`. You can access the child client page locally at `http://127.0.0.1:8080/drawing-panel.html`.
+4. The server will run on `http://0.0.0.0:8080`. You can access the child client page locally at `http://127.0.0.1:8080/drawing-panel.html`.
+
+5. Access through ngrok domain page
 
 ## Notes
 
