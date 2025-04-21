@@ -37,15 +37,17 @@
             </div>
             <div class="gradient-line"></div>
         </div>
-
+        
         <!-- Main Content -->
         <div class="main-content">
             <div class="motion-graphic">
-                <video class="motion-video" autoplay playsinline loop muted>
-                    <source src="icons/492_1744943956.mp4" type="video/mp4">
+                <!-- In order to get the correct color, we need to use the following command to convert the video to webm format:
+                ffmpeg -i $FILENAME.mp4 -pix_fmt yuv420p -color_primaries bt709 -color_trc bt709 -colorspace bt709 -color_range pc -c:v libvpx-vp9 -b:v 2M -c:a libopus $(OUTPUTNAME).webm
+                -->
+                <video class="motion-video" autoplay playsinline loop muted style="filter: none;">
+                    <source src="icons/KidoscopeMotionGraphicFullRange.webm" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                <!-- <img src="kaleidoscope.jpg" alt="Kaleidoscope Motion Graphic"> -->
             </div>
             
             <div class="text-content">
@@ -77,4 +79,6 @@
         window.addEventListener("resize", resizeVideo);
     });
 </script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="parent_page.js"></script>
 </html> 
