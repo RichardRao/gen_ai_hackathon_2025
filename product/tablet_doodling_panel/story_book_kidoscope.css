@@ -1,0 +1,109 @@
+/* Book Section */
+.book {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 36px;
+    width: 96%;
+    height: 550px;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.25);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .page {
+    position: relative;
+    width: 550px;
+    height: 550px;
+    background-color: #FFFFFF;
+    overflow: hidden;
+  }
+  
+  .page-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .overlay.left {
+    background: linear-gradient(270deg, rgba(37,37,37,0.8) 0%, rgba(37,37,37,0) 20%, rgba(217,217,217,0) 85%, rgba(217,217,217,0.5) 100%);
+  }
+  
+  .overlay.right {
+    background: linear-gradient(270deg, rgba(217,217,217,0.5) 0%, rgba(217,217,217,0) 15%, rgba(37,37,37,0) 80%, rgba(37,37,37,0.8) 100%);
+  }
+  
+  
+  .nav-button {
+    position: absolute;
+    bottom: 24px;
+    width: 64px;
+    height: 64px;
+    background-color: #D1FF02;
+    border: 1px solid #B8E03F;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .prev-button {
+    left: 24px;
+  }
+  
+  .next-button {
+    right: 24px;
+  }
+  
+  .nav-button img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Controls */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1006px;
+    width: 100%;
+}
+  
+.pill-button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    border: none;
+    border-radius: 200px;
+    height: 80px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 8px;
+    white-space: nowrap;
+}
+  
+  .check-button {
+    margin-right: auto;
+    background-color: #252525;
+    color: #FFFFFF;
+  }
+  
+  .craft-button {
+    margin-left: auto;
+    background: linear-gradient(90deg, #E38FB8 0%, #FFBC7E 32.69%, #FAFE66 64.18%, #9FEF7F 100%);
+    color: #201B1E;
+    border: 1px solid #303030;
+  }
+  
+  .icon-spark {
+    width: 48px;
+    height: 48px;
+  }

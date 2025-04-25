@@ -1,36 +1,65 @@
-from flask import Flask, request, send_from_directory
+'''
+Filename: gen_ai_hackathon_2025/product/server.py
+Path: gen_ai_hackathon_2025/product
+Created Date: Tuesday, April 15th 2025, 9:35:58 am
+Author: richard
+
+Copyright (c) 2025
+'''
+
+from flask import Flask, request, send_from_directory, Blueprint, render_template
 from flask_socketio import SocketIO, emit
 from PIL import Image
 from flask_cors import CORS
 import base64
 import shutil
 import os
-import numpy as np
-
+import json
 import whisper
-import torch
-import torchaudio
+import time
 
-# Load ASR server
+# static parameters
+STORY_DIR = 'saved_story'
+IMAGEDIR = 'saved_images'
+COMFYUI_INPUT_DIR = '../../ComfyUI/input'
+COMFYUI_OUTPUT_DIR = '../../ComfyUI/output'
+TMP_INPUT_IMAGE = 'AIGC_00001_.png'
+TMP_GENERATED_IMAGE = 'AIGC_00001_.png'
+WORKFLOW_JSON = '../../ComfyUI/user/default/workflows/gen_ai_hackathon_2025_04_25.json'
+TMP_WORKFLOW_JSON = '../../ComfyUI/user/default/workflows/gen_ai_hackathon_2025_04_25_tmp.json'
+
+os.makedirs(STORY_DIR, exist_ok=True)
+# Create a directory to store images if it doesn't exist
+os.makedirs(IMAGEDIR, exist_ok=True)
+# Load ASR server TODO: put ASR server in a separate thread
 model = whisper.load_model("turbo")
-app = Flask(__name__, static_folder='static')
+# Define the Flask app and SocketIO
+app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Store peer connections
 peers = {}
+descriptor = {}
 
-@app.route('/')
+# @app.route('/')
+# def index():
+#     return serve_kidoscope_client('drawing_panel_kidoscope.html')
+
+kidoscope = Blueprint('kidoscope', __name__, static_folder='tablet_doodling_panel')
+@kidoscope.route('/')
 def index():
-    return "WebRTC Server is running."
+    # Serve the static files from the 'Tablet_Doodleing_Panel' directory
+    return send_from_directory(kidoscope.static_folder, "drawing_panel_kidoscope.html")
 
-@app.route('/drawing-panel.html')
-def serve_child_client():
-    return send_from_directory('static','drawing-panel.html')
-
-@app.route('/index.html')
+parentscope = Blueprint('parentscope', __name__, static_folder='mobile_app_page')
+@parentscope.route('/parent')
 def serve_parent_client():
-    return send_from_directory('static','index.html')
+    # Serve the static files from the 'Tablet_Doodleing_Panel' directory
+    return send_from_directory(parentscope.static_folder, 'index.html')
+
+app.register_blueprint(kidoscope)
+app.register_blueprint(parentscope)
 
 # Handle signaling messages for WebRTC
 @socketio.on('signal')
@@ -44,6 +73,7 @@ def handle_signal(data):
 def on_join(data):
     username = data.get('username')
     peers[username] = data
+    descriptor[request.sid] = ""
     # print(peers)
     emit('joined', {'message': f'{username} joined the server.'}, broadcast=True)
 
@@ -56,6 +86,7 @@ def on_disconnect():
         if data['sid'] == request.sid:
             disconnected_peer = username
             break
+    del descriptor[request.sid]
     if disconnected_peer:
         del peers[disconnected_peer]
         emit('left', {'message': f'{disconnected_peer} left the server.'}, broadcast=True)
@@ -63,10 +94,73 @@ def on_disconnect():
 # Handle drawing data
 @socketio.on('drawing')
 def handle_drawing(data):
-    print(['drawing', data])
+    # print(['drawing', data])
     target = data.get('target')
     if target in peers:
         emit('drawing', data, room=peers[target])
+
+# Save the current drawing        
+@socketio.on('save_drawing')
+def save_drawing(data):
+    sid = data.get('sid')
+    pagenum = data.get('page')
+    client_ip = request.remote_addr
+    # print(sid, pagenum)
+    generated_image = sid + '_' + str(pagenum) + '.png'
+    shutil.move(os.path.join(IMAGEDIR, TMP_GENERATED_IMAGE),
+                os.path.join(STORY_DIR, generated_image))
+    with open(os.path.join(STORY_DIR, generated_image), "rb") as result_image:
+        encoded_image = base64.b64encode(result_image.read()).decode('utf-8')
+        # broadcast the saved image to all clients
+        emit('drawingSaved', {'image': f'data:image/png;base64,{encoded_image}', 'description': descriptor[request.sid]}, broadcast=True)
+    
+# Handle story book page request
+@socketio.on('story_book')
+def get_book(data):
+    pagenum = data.get('page')
+    client_ip = request.remote_addr
+    socket_id = data.get('sid')
+    saved_image_1 = socket_id + '_' + str(pagenum) + '.png'
+    saved_image_2 = socket_id + '_' + str(pagenum+1) + '.png'
+    encoded_image_1 = 0
+    encoded_image_2 = 0
+    
+    try:
+        with open(os.path.join(STORY_DIR, saved_image_1), "rb") as result_image:
+            encoded_image_1 = base64.b64encode(result_image.read()).decode('utf-8')
+        with open(os.path.join(STORY_DIR, saved_image_2), "rb") as result_image:
+            encoded_image_2 = base64.b64encode(result_image.read()).decode('utf-8')
+    except Exception as e:
+        print(f"Error reading image files: {e}")
+        emit('storyBookError', {'message': f'Error reading image files: {e}'})
+    emit('storyBookResult', \
+        {'image1': f'data:image/png;base64,{encoded_image_1}',\
+        'image2': f'data:image/png;base64,{encoded_image_2}'})
+    
+
+# Handle text prompt
+@socketio.on('text')
+def handle_text(data):
+    text = data.get('text')
+    descriptor[request.sid] += text
+    ## TODO: send text to ComfyUI 
+    # Send text result as prompt to ComfyUI
+    with open(WORKFLOW_JSON, 'r') as f:
+        workflow = json.load(f)
+    
+    workflow["39"]["inputs"]["text"] = descriptor[request.sid]
+    with open(TMP_WORKFLOW_JSON, 'w') as f:
+        json.dump(workflow, f)
+    os.system('comfy run --workflow ' + TMP_WORKFLOW_JSON)
+    
+    shutil.move(os.path.join(COMFYUI_OUTPUT_DIR, TMP_GENERATED_IMAGE),
+                    os.path.join(IMAGEDIR, TMP_GENERATED_IMAGE))
+    with open(os.path.join(IMAGEDIR, TMP_GENERATED_IMAGE), "rb") as result_image:
+        encoded_image = base64.b64encode(result_image.read()).decode('utf-8')
+        # Send the image back to the client
+        emit('canvasImageResult', {'image': f'data:image/png;base64,{encoded_image}'})
+    ## After ComfyUI process, trigger the next question
+    emit('question', {})
 
 # Handle canvas image data
 @socketio.on('canvas_image')
@@ -74,17 +168,9 @@ def handle_canvas_image(data):
     # Decode the base64 image data
     image_data = data.get('image')
     # Replace with the actual path to your ComfyUI input directory
-    comfyui_input_dir = '../../ComfyUI/input'
-    comfyui_output_dir = '../../ComfyUI/output'
-    workflow_json = '../../ComfyUI/user/default/workflows/gen_ai_hackathon_2025_04_17.json'
-    input_temp_image = 'AIGC_00001_.png'
-    generated_image = 'AIGC_00000_.png'
+
     if image_data:
         try:
-            # Create a directory to store images if it doesn't exist
-            image_dir = 'saved_images'
-            os.makedirs(image_dir, exist_ok=True)
-
             # Save the image to a file with a default white background
             decoded_image = base64.b64decode(image_data.split(',')[1])
             with open('temp_image.png', 'wb') as temp_file:
@@ -94,22 +180,25 @@ def handle_canvas_image(data):
                     background = Image.new('RGB', img.size, (255, 255, 255))
                     background.paste(img, mask=img.split()[3] if img.mode == 'RGBA' else None)
                     background.save('temp_image.png', 'PNG')
-            os.rename('temp_image.png', os.path.join(image_dir, 'canvas_image.png'))
-            shutil.copyfile(os.path.join(image_dir, 'canvas_image.png'), 
-                            os.path.join(comfyui_input_dir, generated_image))
-            # remove all png file in comfyui_output_dir
-            for file in os.listdir(comfyui_output_dir):
+            os.rename('temp_image.png', os.path.join(IMAGEDIR, 'canvas_image.png'))
+            shutil.copyfile(os.path.join(IMAGEDIR, 'canvas_image.png'), 
+                            os.path.join(COMFYUI_INPUT_DIR, TMP_INPUT_IMAGE))
+            # remove all png file in COMFYUI_OUTPUT_DIR
+            for file in os.listdir(COMFYUI_OUTPUT_DIR):
                 if file.endswith('.png'):
-                    os.remove(os.path.join(comfyui_output_dir, file))
-            os.system('comfy run --workflow ' + workflow_json)
+                    os.remove(os.path.join(COMFYUI_OUTPUT_DIR, file))
+            if len(descriptor[request.sid]) == 0:
+                os.system('comfy run --workflow ' + WORKFLOW_JSON)
+            else:
+                os.system('comfy run --workflow ' + TMP_WORKFLOW_JSON)
             # Wait for the ComfyUI process to finish
-            shutil.move(os.path.join(comfyui_output_dir, input_temp_image),
-                            os.path.join(image_dir, generated_image))
-            with open(os.path.join(image_dir, generated_image), "rb") as result_image:
+            shutil.move(os.path.join(COMFYUI_OUTPUT_DIR, TMP_GENERATED_IMAGE),
+                            os.path.join(IMAGEDIR, TMP_GENERATED_IMAGE))
+            with open(os.path.join(IMAGEDIR, TMP_GENERATED_IMAGE), "rb") as result_image:
                 encoded_image = base64.b64encode(result_image.read()).decode('utf-8')
-            # print(encoded_image)
-            # Send the image back to the client
-            emit('canvasImageResult', {'image': f'data:image/png;base64,{encoded_image}'})
+                # Send the image back to the client
+                emit('canvasImageResult', {'image': f'data:image/png;base64,{encoded_image}'})
+            
         except Exception as e:
             emit('canvasImageError', {'message': f'Error saving image: {str(e)}'})
 
@@ -134,7 +223,6 @@ def handle_audio(data):
             with open(aac_path, 'wb') as aac_file:
                 aac_file.write(decoded_audio)
             result = model.transcribe(aac_path, language='en', task='transcribe')
-            print(result['text'])
             # Send a success message back to the client        
             emit('asrResult', {'text': result['text']})
         except Exception as e:

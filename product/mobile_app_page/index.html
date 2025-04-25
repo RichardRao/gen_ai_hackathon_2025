@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Prompt Defaults</title>
+        <link rel="stylesheet" href="mobile_app_page/prompt_styles.css">
+        <link rel="stylesheet" href="mobile_app_page/notification_styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    </head>
+    <body>
+        <div class="container">
+            <header class="mobile-nav">
+                <button class="menu-btn"><img src="mobile_app_page/Icons/Icon_Menu.svg" alt="Menu"></button>
+                <h1 class="logo">Kidoscope</h1>
+                <img class="avatar" src="mobile_app_page/Images/Image_Avatar.png" alt="Avatar">
+            </header>
+            <div class="divider"></div>
+            
+            <main class="main-screen">
+                <!-- Prompt page -->
+                <nav class="tab-group prompt-page">
+                    <button class="tab active" data-tab="prompt"><img src="mobile_app_page/Icons/icon_Type.svg" alt="">Prompt</button>
+                    <button class="tab" data-tab="doodle"><img src="mobile_app_page/Icons/icon_Brush.svg" alt="Doodle">Doodle</button>
+                </nav>
+                <div class="prompt-screen prompt-page">
+                    <div class="kidoscope">
+                        <video src="mobile_app_page/Images/Kidoscope_Motion_Graphic_comp.webm" type="video/webm" autoplay loop muted playsinline width="327" height="327"></video>
+                    </div>
+                    <div class="input-field prompt-page">
+                        <textarea id="message-input" placeholder="Enter your prompt..."></textarea>
+                        <div class="actions">
+                            <button id="record-btn" class="record"><img src="mobile_app_page/Icons/Icon_Record_White.svg" alt="Record"></button>
+                            <button id="send-btn" class="send"><span class="send-text">Send</span><img src="mobile_app_page/Icons/Icon_Arrow-up.svg" alt="Send"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="success-screen prompt-page">
+                    <div class="success-message">
+                        <h2 class="title">Thought Sent!</h2>
+                        <img class="success-graphic" src="mobile_app_page/Images/Kidoscope - Success Send.png" alt="Success Send">
+                        <button id="share-more-btn" class="share-more-btn">Share More Ideas</button>
+                    </div>
+                </div>
+                <!-- Notification page -->
+                <div class="titles notification-page" style="display: none;">
+                    <h2 class="title">Your Little Artist Just Drew!</h2>
+                </div>
+                <div class="title-content notification-page" style="display: none;" id="notifications">
+                    <div class="image-container">
+                    <div class="inner-image">
+                        <img id="inner-image" src="mobile_app_page/Images/Image_Dino.png" alt="Notification Image">
+                    </div>
+                </div>
+                <div class="copy notification-page" style="display: none;">
+                    <p id="brief">Mike's story is blooming! Dino the dinosaur just arrived at a strawberry farm.<br> Any fun ideas to help the story grow? Share your thoughts!</p>
+                </div class="notification-page" style="display: none;">
+                    <button id="cta-btn" class="cta-btn">Co-create Now</button>
+                </div>
+                <div class="title-content notification-page" style="display: none;" id="cocreate" hidden>
+                    <p>Co-Create feature coming soon.</p>
+                </div>
+            </main>
+        </div>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

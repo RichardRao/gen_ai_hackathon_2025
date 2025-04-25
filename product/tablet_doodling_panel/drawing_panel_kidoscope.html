@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Doodling Panel</title>
+    <link rel="stylesheet" href="tablet_doodling_panel/drawing_panel_kidoscope.css">
+    <link rel="stylesheet" href="tablet_doodling_panel/story_book_kidoscope.css">
+    <link rel="stylesheet" href="tablet_doodling_panel/bookshelf_kidoscope.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <template id="story-book-template">
+        <div class="book">
+            <div class="page page-left">
+                <img id="page-left-image" src="" alt="Page Left" class="page-image">
+                <div class="overlay left"></div>
+                <button id="prevPageBtn" class="nav-button prev-button">
+                    <img src="tablet_doodling_panel/icons/Icon_corner-up-left.svg" alt="Previous">
+                </button>
+            </div>
+            <div class="page page-right">
+                <img id="page-right-image" src="" alt="Page Right" class="page-image">
+                <div class="overlay right"></div>
+                <button id="nextPageBtn" class="nav-button next-button">
+                    <img src="tablet_doodling_panel/icons/Icon_corner-up-right.svg" alt="Next">
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <template id="story-book-control">
+        <div class="controls">
+            <button id="checkBtn" class="pill-button check-button">
+                Check Other Stories
+            </button>
+            <button id="craftBtn" class="pill-button craft-button">
+                Craft a New Story
+                <img src="tablet_doodling_panel/icons/Icon_Ai-spark.svg" alt="AI Spark" class="icon-spark">
+            </button>
+        </div>
+    </template>
+
+    <template id="doodle-panel-template">
+        <div class="input-canvas" id="canvasContainer">
+            <canvas id="drawingCanvas"></canvas>
+        </div>
+        <div class="output-display">
+            <div class="output-content" id="aiGeneratedDrawing">
+                <canvas id="generatedCanvas"></canvas>
+            </div>
+            <button id="next-btn" class="next-btn">
+                <img src="tablet_doodling_panel/icons/Icon_Next.svg" alt="Next">
+            </button>
+        </div>
+    </template>
+
+    <template id="doodle-panel-control">
+        <div class="toolbar">
+            <div class="drawing-tools">
+                <div class="tool pen-red">
+                    <img src="tablet_doodling_panel/images/Pen_Red.png" alt="Red Pen">
+                </div>
+                <div class="tool pen-orange">
+                    <img src="tablet_doodling_panel/images/Pen_Orange.png" alt="Orange Pen">
+                </div>
+                <div class="tool pen-yellow">
+                    <img src="tablet_doodling_panel/images/Pen_Yellow.png" alt="Yellow Pen">
+                </div>
+                <div class="tool pen-green">
+                    <img src="tablet_doodling_panel/images/Pen_Green.png" alt="Green Pen">
+                </div>
+                <div class="tool pen-blue">
+                    <img src="tablet_doodling_panel/images/Pen_Blue.png" alt="Blue Pen">
+                </div>
+                <div class="tool pen-violet">
+                    <img src="tablet_doodling_panel/images/Pen_Violet.png" alt="Violet Pen">
+                </div>
+                <div class="tool pen-black">
+                    <img src="tablet_doodling_panel/images/Pen-Black.png" alt="Black Pen">
+                </div>
+                <div class="tool eraser">
+                    <img src="tablet_doodling_panel/images/Eraser.png" alt="Eraser">
+                </div>
+            </div>
+        </div>
+        <div class="cta-section">
+            <button id="publish-btn" class="publish-btn">
+                <span>Publish Story</span>
+                <img src="tablet_doodling_panel/icons/Icon_Share.svg" alt="Share">
+            </button>
+        </div>
+    </template>
+
+    <template id="bookshelf-content-template">
+        <div class="story-panel">
+            <button class="arrow-btn left">
+                <img src="tablet_doodling_panel/icons/Icon_chevron-left.svg" alt="Previous">
+            </button>
+            <div class="story-cards">
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Cover_image.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Dino with Kitty in the strawberry field</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-Floating Dreamer.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Story Floating Dreamer</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-Invisible Butterfly.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Invisible Butterfly</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-Lady Sus Strange Yellow Singing Bird.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Lady Sus Strange Yellow Singing Bird</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-Shapes Incredibles.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Shapes Incredibles</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-Sleepwalking Green Planet.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Sleepwalking Green Planet</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-Space Wonderland Adventure 2064.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">Space Wonderland Adventure 2064</div>
+                    </div>
+                </div>
+                <div class="story">
+                    <div class="story-container">
+                        <div class="story-image-wrapper">
+                            <div class="story-image" style="background-image: url('tablet_doodling_panel/images/Story-The Cloud Sugar Friend.png');"></div>
+                            <div class="story-image-shadow"></div>
+                        </div>
+                        <div class="story-title">The Cloud Sugar Friend</div>
+                    </div>
+                </div>
+            </div>
+            <button class="arrow-btn right">
+                <img src="tablet_doodling_panel/icons/Icon_chevron-right.svg" alt="Next">
+            </button>
+        </div>
+    </template>
+
+    <div class="container">
+        <div class="main-panel">
+            <div class="ai-chatbar">
+                <div id="ai-input" class="ai-input">
+                    <div id="ai-icon" class="ai-icon">
+                        <img src="tablet_doodling_panel/icons/Icon_Kido.svg" alt="Kido Icon">
+                    </div>
+                    <input type="text" class="ai-text" id="text-prompt" style="display:none;" placeholder="">
+                </div>
+                <button class="ai-mic align-right" id="recordButton" style="display:none;">
+                    <img id="recButtonSrc" src="tablet_doodling_panel/icons/Icon_Record.svg" alt="Record">
+                </button>
+            </div>
+            <div id="doodling-area" class="doodling-area"></div>
+        </div>
+        <div id="control-panel" class="control-panel"></div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('drawingCanvas');
+            const container = document.getElementById('canvasContainer');
+            const returnCanvas = document.getElementById('generatedCanvas');
+            const returnContainer = document.getElementById('aiGeneratedDrawing');
+            const promptContainer = document.getElementById('ai-input');
+            const textPrompt = document.getElementById('text-prompt');
+
+            function resizeCanvas() {
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+                returnCanvas.width = returnContainer.clientWidth;
+                returnCanvas.height = returnContainer.clientHeight;
+                textPrompt.style.height = promptContainer.clientHeight - 2;
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        });
+    </script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="tablet_doodling_panel/drawing_panel_kidoscope.js"></script>
+</body>
+</html>

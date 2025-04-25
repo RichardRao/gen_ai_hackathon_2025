@@ -1,0 +1,677 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f9f9f5;
+    color: #1a1a1a;
+}
+
+.container {
+    width: 1194px;
+    height: 834px;
+    margin: 0 auto;
+    padding: 32px;
+    position: relative;
+}
+
+/* Main Panel */
+.main-panel {
+    width: 1130px;
+    height: 662px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* AI Chatbot Bar */
+.ai-chatbar {
+    width: 1032px;
+    height: 88px;
+    background: white;
+    border-radius: 100px;
+    position: relative;
+    margin-left: 49px;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+}
+
+#greeting {
+    margin: 0;
+    font-family: 'Inter';
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    color: #303030;
+}
+
+.ai-chatbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 100px;
+    background: linear-gradient(to right, 
+        rgba(159, 253, 127, 1) 0%,
+        rgba(250, 254, 102, 1) 33%,
+        rgba(255, 188, 126, 1) 64%,
+        rgba(227, 181, 217, 1) 100%
+    );
+    filter: blur(20px);
+    z-index: -1;
+}
+
+.align-right {
+    margin-left: auto;
+}
+
+.ai-text {
+    width: 100%;
+    height: 100%;
+    font-family: 'Inter';
+    font-size: 30px;
+    border: none;
+    left: 3%;
+    position: relative;
+}
+
+.ai-input {
+    width: 95%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    padding: 0 26px;
+}
+
+.ai-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.ai-mic {
+    background-color: #D1FF02;
+    border: 1px solid #9DBF02;
+    border-radius: 32px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 1%;
+    position: absolute;
+    cursor: pointer;
+}
+
+.ai-mic img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.greeting-text {
+    color: #1A1A1A;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Doodling Area */
+.doodling-area {
+    display: flex;
+    gap: 31px;
+    height: 550px;
+}
+
+.input-canvas {
+    width: 550px;
+    height: 550px;
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    position: relative;
+}
+
+.output-display {
+    width: 550px;
+    height: 550px;
+    background: white;
+    border-radius: 12px;
+    position: relative;
+    border: 4px solid transparent;
+    background-clip: padding-box;
+}
+
+.output-display::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 12px;
+    background: linear-gradient(to bottom, 
+        rgba(227, 181, 217, 1) 0%,
+        rgba(255, 188, 126, 1) 33%,
+        rgba(250, 254, 102, 1) 64%,
+        rgba(159, 253, 127, 1) 100%
+    );
+    z-index: -1;
+}
+
+.output-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#outputImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.refresh-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 64px;
+    height: 64px;
+    background: #1D1D1D;
+    border: 1px solid #303030;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.refresh-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Control Panel */
+.control-panel {
+    width: 1130px;
+    height: 80px;
+    position: absolute;
+    left: 32px;
+    top: 742px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+}
+
+/* Tool Bar */
+.toolbar {
+    width: 660px;
+    height: 80px;
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 36px;
+    gap: 12px;
+}
+
+.tool {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool.pen-red,
+.tool.pen-orange,
+.tool.pen-yellow,
+.tool.pen-green,
+.tool.pen-blue,
+.tool.pen-indigo,
+.tool.pen-black,
+.tool.pen-violet {
+    width: 50px;
+    height: 111px;
+}
+
+.tool.eraser {
+    width: 63px;
+    height: 104px;
+}
+
+.tool img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* CTA Section */
+.cta-section {
+    width: 273px;
+    height: 80px;
+}
+
+.publish-btn {
+    width: 273px;
+    height: 80px;
+    background: #D0FF02;
+    border: 1px solid #303030;
+    border-radius: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #201F21;
+}
+
+.publish-btn img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+/* Navigation Bar */
+.nav-bar {
+    width: 100%;
+    height: 56px;
+    background-color: #111111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    position: absolute;
+    top: 100px;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFB1EE;
+}
+
+.profile-button {
+    width: 36px;
+    height: 36px;
+    background-color: #FFB1EE;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Text Buttons Group */
+.text-buttons-group {
+    width: 100%;
+    height: 55px;
+    background-color: #111111;
+    position: absolute;
+    top: 174px;
+}
+
+.text-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    gap: 47px;
+}
+
+.text-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #545659;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.text-button.active {
+    color: #FFB1EE;
+}
+
+.gradient-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        #FFB1EE 0%,
+        #F4AA7A 34.13%,
+        #FAFE66 67.29%,
+        #BAFB9D 100%
+    );
+}
+
+/* Main Content */
+.main-content {
+    width: 100%;
+    height: 597px;
+    position: absolute;
+    top: 247px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 0;
+    gap: 37px;
+}
+
+.motion-graphic {
+    width: 281px;
+    height: 281px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.motion-graphic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.text-content {
+    width: 326px;
+    padding: 0 32px;
+}
+
+.text-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #fff;
+    text-align: center;
+}
+
+.controls {
+    width: 326px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 32px;
+}
+
+.control-button {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    border: 1px solid #303030;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-button:hover {
+    transform: scale(1.05);
+}
+
+.cancel {
+    background-color: #191919;
+}
+
+.record {
+    background-color: #232323;
+}
+
+.cancel-icon, .mic-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* SVG Icons */
+.bars-icon, .profile-icon, .voice-icon, .brush-icon, .prompt-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Main Panel Container */
+.doodling-panel {
+    width: 1194px;
+    height: 834px;
+    margin: 0 auto;
+    background-color: #F9F9F9;
+    position: relative;
+}
+
+/* Main Content Area */
+.main-content {
+    width: 1130px;
+    height: 662px;
+    margin: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* AI Chatbot Bar */
+.ai-chatbot-bar {
+    width: 1032px;
+    height: 88px;
+    position: relative;
+    margin-left: 49px;
+}
+
+.gradient-bar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 42.5px;
+    background: linear-gradient(135deg, 
+        rgba(227, 181, 217, 1) 0%,
+        rgba(255, 188, 126, 1) 32.69%,
+        rgba(250, 254, 102, 1) 64.18%,
+        rgba(159, 253, 127, 1) 100%
+    );
+    filter: blur(30px);
+}
+
+.mask-group {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.canvas-background {
+    width: 100%;
+    height: 100%;
+    background-color: #D9D9D9;
+    border-radius: 12px;
+}
+
+.output-image {
+    position: absolute;
+    width: 689px;
+    height: 919px;
+    top: -280px;
+    left: -50px;
+    background-color: #D9D9D9;
+}
+
+.gradient-border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    border: 4px solid transparent;
+    background: linear-gradient(90deg, 
+        rgba(227, 181, 217, 1) 0%,
+        rgba(255, 188, 126, 1) 32.69%,
+        rgba(250, 254, 102, 1) 64.18%,
+        rgba(159, 253, 127, 1) 100%
+    );
+    background-clip: padding-box;
+}
+
+.refresh-button {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, 
+        rgba(227, 181, 217, 1) 0%,
+        rgba(255, 188, 126, 1) 32.69%,
+        rgba(250, 254, 102, 1) 64.18%,
+        rgba(159, 253, 127, 1) 100%
+    );
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-icon {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+/* Drawing Tools */
+.drawing-tools {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+}
+
+.pen-tool {
+    width: 107px;
+    height: 44px;
+    background-color: white;
+    border-radius: 22px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.pen-tool::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 0;
+    width: 11px;
+    height: 100%;
+    background-color: var(--pen-color);
+}
+
+.pen-tool::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 13px;
+    width: 24px;
+    height: 18px;
+    background-color: var(--pen-color);
+    border-radius: 0 22px 22px 0;
+}
+
+.eraser-tool {
+    width: 111px;
+    height: 62px;
+    background: linear-gradient(to right, #FC7C91 45px, #F6597B 45px);
+    border-radius: 31px;
+    position: relative;
+}
+
+.eraser-tool::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 3px;
+    width: 56px;
+    height: 56px;
+    background-color: #F6597B;
+    border-radius: 28px;
+}
+
+/* CTA Button */
+.cta-section {
+    margin-left: auto;
+}
+
+.publish-button {
+    width: 273px;
+    height: 80px;
+    background-color: #D1FF02;
+    border: 1px solid #303030;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.publish-button span {
+    color: #202020;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.megaphone-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #202020;
+    border-radius: 50%;
+}
+
+.next-btn {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    width: 72px;
+    height: 72px;
+    border-radius: 100%;
+    background: #1D1D1D;
+    border: 1px solid #303030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.next-btn:hover {
+    background: #232323;
+    border-color: #404040;
+}
+
+.next-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}

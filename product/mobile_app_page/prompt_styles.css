@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@font-face {
+  font-family: 'ABC Whyte'; /* Display font */
+  src: url('Fonts/ABCWhyte-Regular-Trial.woff2') format('woff2'),
+       url('Fonts/ABCWhyte-Regular-Trial.woff') format('woff'),
+       url('Fonts/ABCWhyte-Regular-Trial.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC Whyte';
+  src: url('Fonts/ABCWhyte-Medium-Trial.woff2') format('woff2'),
+       url('Fonts/ABCWhyte-Medium-Trial.woff') format('woff'),
+       url('Fonts/ABCWhyte-Medium-Trial.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body and container */
+body {
+  background-color: #0F0F0F;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+.container {
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+}
+.mobile-nav .menu-btn,
+.mobile-nav .avatar {
+  background: none;
+  border: none;
+  padding: 0;
+}
+.mobile-nav .menu-btn img {
+  width: 24px;
+  height: 24px;
+}
+.mobile-nav img.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.mobile-nav .logo {
+  font-family: 'ABC Whyte', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  background: linear-gradient(90deg, #FFB1EE 0%, #F39D7A 38%, #FBFE66 76%, #BAFCAF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Divider line */
+.divider {
+  height: 1px;
+  background-color: #303030;
+}
+
+/* Tabs */
+.tab-group {
+  display: flex;
+  /* margin: 16px 0; */
+}
+.tab-group .tab {
+  background-color: transparent;
+  border: none;
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 2px solid #303030;
+  color: #8D8D8D;
+  pointer-events: none;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  gap: 8px;
+}
+.tab-group .tab[data-tab="prompt"].active {
+  border-bottom-color: #D1FF02;
+  color: #D1FF02;
+}
+.tab-group .tab[data-tab="doodle"].active {
+  border-bottom-color: #8D8D8D;
+  color: #8D8D8D;
+}
+
+/* Main Screen */
+.main-screen {
+  padding: 0 16px;
+}
+.kidoscope {
+  display: flex;
+  justify-content: center;
+}
+.kidoscope img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* Input Field */
+.input-field {
+  background: #0F0F0F;
+  border: 1px solid #303030;
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow:
+    0 4px 6px rgba(16, 24, 40, 0.03),
+    0 12px 16px rgba(16, 24, 40, 0.08);
+  margin-top: 16px;
+}
+.input-field textarea {
+  width: 100%;
+  height: 148px;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-size: 16px;
+  resize: none;
+}
+.input-field textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Placeholder color */
+.input-field textarea::placeholder {
+  color: #8c8c8c;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.actions button {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.actions button.record {
+  background: #1A1A1A;
+  border: 1px solid #303030;
+  margin-right: 8px;
+}
+.actions button.send {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4C4AFC;
+  border: none;
+}
+.actions button.send img {
+  margin: 0;
+}
+
+/* CTA button states */
+.actions button.record.active {
+  background: #D1FF02;
+  border: 1px solid #9DC002;
+}
+.actions button.record.disabled {
+  background: #252525;
+  border: 1px solid #303030;
+  cursor: not-allowed;
+}
+.actions button.send.disabled {
+  background: #303030;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Hide text by default, only show on active */
+.actions button.send .send-text {
+  display: none;
+}
+
+/* Active state: pill shape with text */
+.actions button.send {
+  transition: width 0.2s ease, padding 0.2s ease, border-radius 0.2s ease;
+}
+.actions button.send .send-text {
+  display: none;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.actions button.send.active {
+  width: auto;
+  min-width: 102px;
+  padding: 0 16px;
+  border-radius: 100px;
+  display: inline-flex;
+}
+.actions button.send.active img {
+  margin: 0;
+}
+.actions button.send.active .send-text {
+  display: inline-block;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .container {
+    width: 100%;
+  }
+}
+
+/* Success screen styles */
+.prompt-screen {
+  display: block;
+}
+.prompt-screen.hidden {
+  display: none;
+}
+.success-screen {
+  display: none;
+  text-align: center;
+  margin: 108px auto 60px;
+}
+.success-screen.active {
+  display: block;
+}
+.success-screen .title {
+  color: #FFFFFF;
+  font-family: 'ABC Whyte', sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.success-screen .success-graphic {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+}
+.success-screen .share-more-btn {
+  margin-top: 24px;
+  width: 100%;
+  background: #4C4AFC;
+  border: none;
+  border-radius: 100px;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 12px 24px;
+  cursor: pointer;
+}
