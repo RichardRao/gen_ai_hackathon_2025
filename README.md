@@ -1,6 +1,6 @@
 # Kidoscope - Gen AI Hackathon 2025
 
-This project includes a Flask server with Socket.IO for handling real-time communication and additional functionalities like image processing and audio transcription.
+Kidoscope uses AI agent technology to create imaginative stories that empower young minds and celebrate human connection. It utilized the state-of-the-art Generative AI models for voice processing, image generation and language processing. 
 
 ## Prerequisites
 Ensure you have the following installed on your system:

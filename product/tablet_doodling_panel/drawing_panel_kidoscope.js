@@ -156,8 +156,8 @@ function initializeSocket() {
         socketInitialized = true;
 
         // Establish connection with the server
-        socket = io("http://localhost:5000");
-        // socket = io("https://5164-108-201-185-119.ngrok-free.app");
+        // socket = io("http://localhost:5000");
+        socket = io("https://kidoscope.ngrok.io");
         // Handle connection events
         socket.on('connect', () => {
             const userName = Math.random().toString(36).substring(2, 15); // Generate a random request ID
