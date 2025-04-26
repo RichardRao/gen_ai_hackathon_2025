@@ -53,6 +53,14 @@ document.querySelectorAll('.tool').forEach(tool => {
         document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
         // Add active class to selected tool
         tool.classList.add('active');
+        // Adjust the size of the selected tool
+        tool.style.transform = 'scale(1.25)';
+        // Reset the size of other tools
+        document.querySelectorAll('.tool').forEach(t => {
+            if (t !== tool) {
+            t.style.transform = 'scale(1)';
+            }
+        });
         
         // Update current tool and color
         currentTool = tool.classList[1];

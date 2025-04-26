@@ -76,10 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
         recordBtn.classList.toggle('active');
         if (!SpeechRecognition) return;
         if (recordBtn.classList.contains('active')) {
-            recordIcon.src = 'Icons/Icon_Record.svg';
+            recordIcon.src = 'mobile_app_page/Icons/Icon_Record.svg';
             recognition.start();
         } else {
-            recordIcon.src = 'Icons/Icon_Record_White.svg';
+            recordIcon.src = 'mobile_app_page/Icons/Icon_Record_White.svg';
             recognition.stop();
         }
         updateSendBtnState();
