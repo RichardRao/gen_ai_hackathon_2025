@@ -1,4 +1,4 @@
-# Gen AI Hackathon 2025 - Server Setup
+# Kidoscope - Gen AI Hackathon 2025
 
 This project includes a Flask server with Socket.IO for handling real-time communication and additional functionalities like image processing and audio transcription.
 
