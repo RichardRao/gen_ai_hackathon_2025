@@ -48,8 +48,10 @@ Ensure you have the following installed on your system:
    pip install comfy-cli
    pip install flask flask-socketio pillow torch torchaudio whisper
    ```
+   NOTE: The prerequiste model and checkpoint can be found at: https://drive.google.com/drive/folders/1OS-D-bes2mpJnax3rPnX-TA54pQWQDb-?usp=drive_link
+   The ComfyUI manager needs to be mannually installed in order to add required node. 
 
-4. Ensure `ffmpeg` is installed:
+5. Ensure `ffmpeg` is installed:
    - On Ubuntu/Debian:
      ```bash
      sudo apt update
