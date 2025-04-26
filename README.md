@@ -89,6 +89,8 @@ Ensure you have the following installed on your system:
 
 ## System Architecture
 
+![AI Hackathon 2025](https://github.com/user-attachments/assets/58fb99f3-262e-427c-8566-6d7e02d12bfb)
+
 Fig. 1. Demo App System architecture. Note: Red dot line stands for “to-be-implemented”. 
 
 ## Notes
