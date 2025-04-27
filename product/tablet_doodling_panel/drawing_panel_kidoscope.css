@@ -111,8 +111,10 @@ p {
 }
 
 .ai-mic {
-    background-color: #D1FF02;
-    border: 1px solid #9DBF02;
+    /* background-color: #D1FF02;
+    border: 1px solid #9DBF02; */
+    background-color: #1A1A1A;
+    border: 1px solid #303030;
     border-radius: 32px;
     width: 64px;
     height: 64px;
@@ -426,7 +428,8 @@ p {
     width: 64px;
     height: 64px;
     border-radius: 32px;
-    border: 1px solid #303030;
+    /* border: 1px solid #303030; */
+    border: 1px solid #9DC002;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -439,16 +442,19 @@ p {
 }
 
 .cancel {
-    background-color: #191919;
+    /* background-color: #191919; */
+    background-color: #D1FF02;
 }
 
 .record {
-    background-color: #232323;
+    /* background-color: #232323; */
+    background-color: #D1FF02;
 }
 
 .cancel-icon, .mic-icon {
     width: 24px;
     height: 24px;
+    color: #0f0f0f;
 }
 
 /* SVG Icons */

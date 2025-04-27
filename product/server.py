@@ -7,18 +7,18 @@ Author: richard
 Copyright (c) 2025
 '''
 
-from flask import Flask, request, send_from_directory, Blueprint, render_template
+from flask import Flask, request, send_from_directory, Blueprint, jsonify
 from flask_socketio import SocketIO, emit
 from PIL import Image
 from flask_cors import CORS
-import base64
-import shutil
-import os
+import requests
+import os, subprocess, atexit, shutil, base64
 import json
 import whisper
-import time
 
 # static parameters
+OLLAMA_PORT = 11434
+# Define the directories for saving images and story
 STORY_DIR = 'saved_story'
 IMAGEDIR = 'saved_images'
 COMFYUI_INPUT_DIR = '../../ComfyUI/input'
@@ -31,7 +31,35 @@ TMP_WORKFLOW_JSON = '../../ComfyUI/user/default/workflows/gen_ai_hackathon_2025_
 os.makedirs(STORY_DIR, exist_ok=True)
 # Create a directory to store images if it doesn't exist
 os.makedirs(IMAGEDIR, exist_ok=True)
-# Load ASR server TODO: put ASR server in a separate thread
+
+# Preload the model by sending a dummy request
+def preload_model():
+    payload = {
+        "model": "smollm",
+        "prompt": "Hello",
+    }
+    try:
+        # Assuming Ollama listens at http://localhost:11434
+        resp = requests.post("http://localhost:11434/api/generate", json=payload)
+        if resp.status_code == 200:
+            print("Model preloaded successfully")
+        else:
+            print(f"Failed to preload model: {resp.text}")
+    except Exception as e:
+        print(f"Error preloading model: {e}")
+
+# 1) Start the Ollama API server in the background
+proc = subprocess.Popen(
+    ["ollama", "serve"],
+    env={**os.environ, "OLLAMA_HOST": "0.0.0.0"},  # optional: listen on all interfaces
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+)
+
+# Make sure we kill Ollama on exit
+atexit.register(proc.kill)
+# Preload the model
+preload_model()
 model = whisper.load_model("turbo")
 # Define the Flask app and SocketIO
 app = Flask(__name__)
@@ -41,10 +69,6 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Store peer connections
 peers = {}
 descriptor = {}
-
-# @app.route('/')
-# def index():
-#     return serve_kidoscope_client('drawing_panel_kidoscope.html')
 
 kidoscope = Blueprint('kidoscope', __name__, static_folder='tablet_doodling_panel')
 @kidoscope.route('/')
@@ -142,13 +166,29 @@ def get_book(data):
 @socketio.on('text')
 def handle_text(data):
     text = data.get('text')
+    # after the 5th question, using the text as a prompt to deepseek
+    qid = data.get('question')
     descriptor[request.sid] += text
+    if qid >=5:
+        payload = {
+            "model": "smollm",
+            "prompt": "Write me a prompt for generating a 1024x1024 image based on the input text. The prompt needs to be detailed and descriptive. Limit the output to a maximum of 100 words and do NOT show me the thinking process. And following is the text: " + descriptor[request.sid],
+            "stream": False
+        }
+        resp = requests.post(
+            f"http://localhost:{OLLAMA_PORT}/api/generate",
+            json=payload
+        )
+        prompt = resp.json()["response"]
+        print(prompt)
+    else:
+        prompt = descriptor[request.sid]
     ## TODO: send text to ComfyUI 
     # Send text result as prompt to ComfyUI
     with open(WORKFLOW_JSON, 'r') as f:
         workflow = json.load(f)
     
-    workflow["39"]["inputs"]["text"] = descriptor[request.sid]
+    workflow["39"]["inputs"]["text"] = prompt
     with open(TMP_WORKFLOW_JSON, 'w') as f:
         json.dump(workflow, f)
     os.system('comfy run --workflow ' + TMP_WORKFLOW_JSON)

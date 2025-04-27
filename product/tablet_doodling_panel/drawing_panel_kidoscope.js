@@ -1,7 +1,3 @@
-// Canvas setup
-// const canvas = document.getElementById('drawingCanvas');
-// const ctx = canvas.getContext('2d');
-// const outputImage = document.getElementById('outputImage');
 /*
  * Filename: /home/richard/workspace/gen_ai_hackathon_2025/product/tablet_doodling_panel/drawing_panel_kidoscope.js
  * Path: /home/richard/workspace/gen_ai_hackathon_2025/product/tablet_doodling_panel
@@ -196,6 +192,13 @@ function initializeSocket() {
             aiTextOutput.placeholder = '';
             aiTextOutput.value = data.text;
             resizePlaceholderFont();
+
+            // change the button image source to Icon_Record.svg
+            document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Arrow-up.svg';
+            microphone.style.backgroundColor = '#4c4afd';
+            microphone.style.border = '1px solid #e2e8f0';
+            microphone.disabled = false;
+            sendAvailable = true;
         });
 
         socket.on('question', (data) => {
@@ -205,7 +208,6 @@ function initializeSocket() {
         });
 
         socket.on('storyBookResult', (data) => {
-            // console.log('Received story book result:', data);
             try{
                 const pageLeftImage = document.getElementById('page-left-image');
                 pageLeftImage.src = data.image1;
@@ -270,30 +272,39 @@ navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             microphone.classList.toggle('recording');
             if (microphone.classList.contains('recording')) {
                 // change the button image source to Icon_Record_Active.png
+                // document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Record_Active.svg';
                 document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Record_Active.svg';
-                microphone.style.backgroundColor = '#252525';
-                microphone.style.border = '1px solid #303030';
+                // microphone.style.backgroundColor = '#252525';
+                microphone.style.backgroundColor = '#D1FF02';
+                // microphone.style.border = '1px solid #303030';
+                microphone.style.border = '1px solid #9DBF02';
                 mediaRecorder.start();
             } 
             else {
-                // change the button image source to Icon_Record.svg
-                document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Arrow-up.svg';
-                microphone.style.backgroundColor = '#4c4afd';
-                microphone.style.border = '1px solid #e2e8f0';
+                // // change the button image source to Icon_Record.svg
+                document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Record.svg';
+                // microphone.style.backgroundColor = '#4c4afd';
+                // microphone.style.border = '1px solid #e2e8f0';
+                microphone.style.backgroundColor = '#303030';
+                microphone.style.border = '1px solid #303030';
+                microphone.disabled = true;
                 mediaRecorder.stop();
                 sendAvailable = true;
             }
         }
         else {
-            // microphone.innerHTML = 'Click to Record';
+            // User clicked the send button
             sendAvailable = false;
-            document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Record.svg';
-            microphone.style.backgroundColor = '#D1FF02';
-            microphone.style.border = '1px solid #9DBF02';
-            socket.emit('text', { text: aiTextOutput.value });
+            document.getElementById('recButtonSrc').src = 'tablet_doodling_panel/icons/Icon_Record_White.svg';
+            // microphone.style.backgroundColor = '#D1FF02';
+            // microphone.style.border = '1px solid #9DBF02';
+            microphone.style.backgroundColor = '#252525';
+            microphone.style.border = '1px solid #303030';
+            microphone.style.display = 'none';
+            socket.emit('text', { text: aiTextOutput.value, question: currentQuestion });
             aiTextOutput.value = '';
             aiTextOutput.style.fontSize = '30px';
-            aiTextOutput.placeholder = 'Kidoscope is generating...';
+            aiTextOutput.placeholder = 'Making your picture. Ready in 10 seconds...';
         }
     };
 })
@@ -377,10 +388,9 @@ function initializeQuestionSequence() {
 
 function presentQuestion() {
     const audio = new Audio('tablet_doodling_panel/res/audio_' + currentQuestion + '.wav');
-    aiTextOutput.style.display = 'block';
-    microphone.style.display = 'block';
-    kidIcon.style.display = 'block';
     console.log('Playing audio for question:', currentQuestion);
+    kidIcon.style.display = 'block';
+    aiTextOutput.style.display = 'block';
     var line = currentQuestion - 1;
     // Set the placeholder text based on the current question
     fetch('tablet_doodling_panel/res/transcripts.txt')
@@ -395,6 +405,9 @@ function presentQuestion() {
         })
     audio.play().catch(error => {
         console.error('Playback failed:', error);
+    });
+    audio.addEventListener('ended', () => {
+        microphone.style.display = 'block';
     });
     currentQuestion++;
     console.log('Current question:', currentQuestion);
